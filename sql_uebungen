@@ -72,9 +72,9 @@
 -- Anzahl erwarteter Datensätze: 1 (9)
 -- SQL-Abfrage:
 
-SELECT COUNT(*) FROM tblZutrittsversuche
-WHERE Ergebnis = "Zutritt gestattet"
-AND DATE(Zeitstempel) = "2017-11-22";
+-- SELECT COUNT(*) FROM tblZutrittsversuche
+-- WHERE Ergebnis = "Zutritt gestattet"
+-- AND DATE(Zeitstempel) = "2017-11-22";
 
 
 -- Aufgabe 8:
@@ -82,9 +82,9 @@ AND DATE(Zeitstempel) = "2017-11-22";
 -- Anzahl erwarteter Datensätze: 18
 -- SQL-Abfrage:
 
-SELECT * FROM tblZutrittsversuche
-WHERE Ergebnis = "Zutritt abgelehnt"
-AND tblChips_ChipsID LIKE "1%";
+-- SELECT * FROM tblZutrittsversuche
+-- WHERE Ergebnis = "Zutritt abgelehnt"
+-- AND tblChips_ChipsID LIKE "1%";
 
 
 -- Aufgabe 9:
@@ -100,9 +100,9 @@ AND tblChips_ChipsID LIKE "1%";
 
 -- oder wenn nur erfolgreich:
 
-SELECT tblChips_ChipsID, COUNT(*) FROM tblZutrittsversuche
-WHERE Ergebnis = "Zutritt gestattet"
-GROUP BY tblChips_ChipsID;
+-- SELECT tblChips_ChipsID, COUNT(*) FROM tblZutrittsversuche
+-- WHERE Ergebnis = "Zutritt gestattet"
+-- GROUP BY tblChips_ChipsID;
 
 
 -- Aufgabe 10:
@@ -110,10 +110,10 @@ GROUP BY tblChips_ChipsID;
 -- Anzahl erwarteter Datensätze: 2 (5,11 / 12,24)
 -- SQL-Abfrage:
 
-SELECT tblChips_ChipsID, COUNT(*) FROM tblZutrittsversuche
-WHERE Ergebnis = "Zutritt gestattet"
-GROUP BY tblChips_ChipsID
-HAVING COUNT(*) > 10;
+-- SELECT tblChips_ChipsID, COUNT(*) FROM tblZutrittsversuche
+-- WHERE Ergebnis = "Zutritt gestattet"
+-- GROUP BY tblChips_ChipsID
+-- HAVING COUNT(*) > 10;
 
 
 -- Aufgabe 11:
@@ -121,7 +121,7 @@ HAVING COUNT(*) > 10;
 -- Ergebnis: 715
 -- SQL-Abfrage:
 
-SELECT SUM(tblChips_ChipsID) FROM tblZutrittsversuche;
+-- SELECT SUM(tblChips_ChipsID) FROM tblZutrittsversuche;
 
 
 -- Aufgabe 12:
@@ -138,13 +138,10 @@ HAVING (SELECT COUNT(*) FROM tblZutrittsversuche
 
 -- Aufagbe 12 Alternative:
 
--- SELECT ChipsID FROM tblChips
--- WHERE (SELECT COUNT(*) FROM tblZutrittsversuche
---         WHERE ChipsID = tblChips_ChipsID
--- AND Ergebnis = "Zutritt gestattet") = 0
--- AND (SELECT COUNT(*) FROM tblZutrittsversuche
---         WHERE ChipsID = tblChips_ChipsID) > 0;
-
+SELECT DISTINCT tblChips_ChipsID FROM tblZutrittsversuche
+WHERE tblChips_ChipsID NOT IN (SELECT tblChips_ChipsID 
+                               FROM tblZutrittsversuche
+                               WHERE Ergebnis = "Zutritt gestattet")
 
 -- Aufgabe 13:
 -- Knifflige Aufgabe:
