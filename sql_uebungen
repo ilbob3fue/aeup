@@ -1,0 +1,154 @@
+-- Aufgabe 1
+-- Geben Sie alle Zutrittsversuche aus.
+-- Anzahl erwarteter Datensätze: 83
+-- SQL-Abfrage:
+
+-- SELECT * FROM tblZutrittsversuche;
+
+
+-- Aufgabe 2
+-- Geben Sie alle „Zutritt abgelehnt“-Versuche aus.
+-- Anzahl erwarteter Datensätze: 43
+-- SQL-Abfrage:
+
+-- SELECT * FROM tblZutrittsversuche
+-- WHERE Ergebnis = "Zutritt abgelehnt";
+
+
+-- Aufgabe 3:
+-- Geben Sie alle „Zutritt gestattet“-Versuche aufsteigend sortiert nach tblChips_ChipsID aus.
+-- Anzahl erwarteter Datensätze: 40
+-- SQL-Abfrage:
+
+-- SELECT * FROM tblZutrittsversuche
+-- WHERE Ergebnis = "Zutritt gestattet"
+-- ORDER BY tblChips_ChipsID ASC;
+
+
+-- Aufgabe 4:
+-- Geben Sie Zeitstempel und tblChips_ChipsID der abgelehnten Zutritte absteigend sor-tiert nach Zeitstempel aus.
+-- (Hinweis: Aufgrund der Systemzeit kann es zu Abweichungen beim Ergebnis um 1 Stunde kommen)
+-- Anzahl erwarteter Datensätze: 43 (erster 2017-11-22 11:27:34 | 12)
+-- SQL-Abfrage:
+
+-- SELECT Zeitstempel, tblChips_ChipsID FROM tblZutrittsversuche
+-- WHERE Ergebnis = "Zutritt abgelehnt"
+-- ORDER BY Zeitstempel DESC;
+
+
+-- Aufgabe 5:
+-- Welche tblChips_ChipsID wurden mindestens einmal abgelehnt?
+-- Anzahl erwarteter Datensätze: 4 (3, 5, 12,15)
+-- SQL-Abfrage:
+
+-- SELECT tblChips_ChipsID, COUNT(*) FROM tblZutrittsversuche
+-- WHERE Ergebnis = "Zutritt abgelehnt"
+-- GROUP BY tblChips_ChipsID;
+
+
+-- Aufgabe 5 Alternative Lösungsmöglichkeit?:
+
+-- SELECT tblChips_ChipsID, COUNT(tblChips_ChipsID) FROM tblChips, tblZutrittsversuche
+-- WHERE Ergebnis = "Zutritt abgelehnt"
+-- AND tblChips_ChipsID = tblChips.ChipsID
+-- GROUP BY tblChips_ChipsID;
+
+-- NACHTRÄGLICH: könnte man mit SELECT DISTINCT machen
+
+
+-- Aufgabe 6:
+-- Welchen tblChips_ChipsIDs wurde mindestens einmal Zutritt gestattet (sortiert nach tblChips_ChipsID)?
+-- Anzahl erwarteter Datensätze: 3 (3, 5, 12)
+-- SQL-Abfrage:
+
+-- SELECT tblChips_ChipsID, COUNT(*) FROM tblZutrittsversuche
+-- WHERE Ergebnis = "Zutritt gestattet"
+-- GROUP BY tblChips_ChipsID
+-- ORDER BY tblChips_ChipsID;
+
+
+-- Aufgabe 7:
+-- Wie oft wurde am 22.November 2017 Zutritt gestattet?
+-- Anzahl erwarteter Datensätze: 1 (9)
+-- SQL-Abfrage:
+
+-- SELECT * /* oder COUNT(*) */ FROM tblZutrittsversuche
+-- WHERE Ergebnis = "Zutritt gestattet"
+-- AND DATE(Zeitstempel) = "2017-11-22";
+
+
+-- Aufgabe 8:
+-- Geben Sie alle abgelehnten Zutritte aus, deren tblChips_ChipsID mit „1“ beginnt.
+-- Anzahl erwarteter Datensätze: 18
+-- SQL-Abfrage:
+
+-- SELECT * FROM tblZutrittsversuche
+-- WHERE Ergebnis = "Zutritt abgelehnt"
+-- AND tblChips_ChipsID LIKE "1%";
+
+
+-- Aufgabe 9:
+-- Geben Sie für jede tblChips_ChipsID die Anzahl der erfolgreichen Zutritte aus.
+-- Anzahl erwarteter Datensätze: 3 (3,5 / 5,11 / 12,24)
+-- SQL-Abfrage:
+
+-- SELECT ChipsID,
+--     (SELECT COUNT(*) FROM tblZutrittsversuche
+--     WHERE ChipsID = tblChips_ChipsID
+--     AND Ergebnis = "Zutritt gestattet") as "Erfolgreiche Zutritte"
+-- FROM tblChips;
+
+-- oder wenn nur erfolgreich:
+
+-- SELECT tblChips_ChipsID, COUNT(*) FROM tblZutrittsversuche
+-- WHERE Ergebnis = "Zutritt gestattet"
+-- GROUP BY tblChips_ChipsID;
+
+
+-- Aufgabe 10:
+-- Geben Sie jede tblChips_ChipsID aus, welche mehr als 10 erfolgreiche Zutritte gespei-chert haben.
+-- Anzahl erwarteter Datensätze: 2 (5,11 / 12,24)
+-- SQL-Abfrage:
+
+-- SELECT tblChips_ChipsID, COUNT(*) FROM tblZutrittsversuche
+-- WHERE Ergebnis = "Zutritt gestattet"
+-- GROUP BY tblChips_ChipsID
+-- HAVING COUNT(*) > 10;
+
+
+-- Aufgabe 11:
+-- Geben Sie die Summe aller tblChips_ChipsID aller Zutrittsversuche aus. (ja wirklich die Summe)
+-- Ergebnis: 715
+-- SQL-Abfrage:
+
+-- SELECT SUM(tblChips_ChipsID) FROM tblZutrittsversuche;
+
+
+-- Aufgabe 12:
+-- Welche Chips haben immer nur die Rückmeldung „Zutritt abgelehnt“ bekommen?
+-- Anzahl erwarteter Datensätze: 1 (15)
+-- SQL-Abfrage:
+
+-- SELECT tblChips_ChipsID as OuterChipsID FROM tblZutrittsversuche
+-- GROUP BY tblChips_ChipsID
+-- HAVING (SELECT COUNT(*) FROM tblZutrittsversuche
+--         WHERE OuterChipsID = tblChips_ChipsID
+--         AND Ergebnis = "Zutritt gestattet") = 0;
+
+
+-- Aufagbe 12 Alternative:
+
+-- SELECT ChipsID FROM tblChips
+-- WHERE (SELECT COUNT(*) FROM tblZutrittsversuche
+--         WHERE ChipsID = tblChips_ChipsID
+-- AND Ergebnis = "Zutritt gestattet") = 0
+-- AND (SELECT COUNT(*) FROM tblZutrittsversuche
+--         WHERE ChipsID = tblChips_ChipsID) > 0;
+
+
+-- Aufgabe 13:
+-- Knifflige Aufgabe:
+-- Für jeden Chip das Ergebnis seines ersten Zutrittsversuchs (sortiert nach Chipnummer und ohne Ausgabe des Zeitstempels)
+-- Anzahl erwarteter Datensätze: 4 (/3,abgelehnt/5,abgelehnt/12,gestattet/15,abgelehnt)
+-- SQL-Abfrage:
+
