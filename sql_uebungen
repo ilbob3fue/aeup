@@ -129,19 +129,19 @@
 -- Anzahl erwarteter Datensätze: 1 (15)
 -- SQL-Abfrage:
 
-SELECT tblChips_ChipsID as OuterChipsID FROM tblZutrittsversuche
-GROUP BY tblChips_ChipsID
-HAVING (SELECT COUNT(*) FROM tblZutrittsversuche
-        WHERE OuterChipsID = tblChips_ChipsID
-        AND Ergebnis = "Zutritt gestattet") = 0;
+-- SELECT tblChips_ChipsID as OuterChipsID FROM tblZutrittsversuche
+-- GROUP BY tblChips_ChipsID
+-- HAVING (SELECT COUNT(*) FROM tblZutrittsversuche
+--         WHERE OuterChipsID = tblChips_ChipsID
+--         AND Ergebnis = "Zutritt gestattet") = 0;
 
 
 -- Aufagbe 12 Alternative:
 
-SELECT DISTINCT tblChips_ChipsID FROM tblZutrittsversuche
-WHERE tblChips_ChipsID NOT IN (SELECT tblChips_ChipsID 
-                               FROM tblZutrittsversuche
-                               WHERE Ergebnis = "Zutritt gestattet")
+-- SELECT DISTINCT tblChips_ChipsID FROM tblZutrittsversuche
+-- WHERE tblChips_ChipsID NOT IN (SELECT tblChips_ChipsID 
+--                                FROM tblZutrittsversuche
+--                                WHERE Ergebnis = "Zutritt gestattet")
 
 -- Aufgabe 13:
 -- Knifflige Aufgabe:
@@ -149,8 +149,13 @@ WHERE tblChips_ChipsID NOT IN (SELECT tblChips_ChipsID
 -- Anzahl erwarteter Datensätze: 4 (/3,abgelehnt/5,abgelehnt/12,gestattet/15,abgelehnt)
 -- SQL-Abfrage:
 
-SELECT tblChips_ChipsID, Ergebnis FROM tblZutrittsversuche
-WHERE Zeitstempel IN (SELECT MIN(Zeitstempel)
-                      FROM tblZutrittsversuche
-                      GROUP BY tblChips_ChipsID)
-ORDER BY tblChips_ChipsID;
+-- SELECT ErsteZutrittsversuche.tblChips_ChipsID, tblZutrittsversuche.Ergebnis, tblZutrittsversuche.ZutrittsversuchID
+-- FROM (SELECT tblChips_ChipsID, MIN(Zeitstempel) as Zeitstempel
+--         FROM tblZutrittsversuche
+--         GROUP BY tblChips_ChipsID) as ErsteZutrittsversuche,
+--      tblZutrittsversuche
+-- WHERE ErsteZutrittsversuche.tblChips_ChipsID = tblZutrittsversuche.tblChips_ChipsID
+-- AND ErsteZutrittsversuche.Zeitstempel = tblZutrittsversuche.Zeitstempel
+-- ORDER BY ErsteZutrittsversuche.tblChips_ChipsID;
+
+-- Lösung viel zu komplex, versuche das ganze zu vereinfachen.
