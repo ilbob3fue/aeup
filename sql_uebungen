@@ -149,13 +149,11 @@
 -- Anzahl erwarteter Datensätze: 4 (/3,abgelehnt/5,abgelehnt/12,gestattet/15,abgelehnt)
 -- SQL-Abfrage:
 
--- SELECT ErsteZutrittsversuche.tblChips_ChipsID, tblZutrittsversuche.Ergebnis, tblZutrittsversuche.ZutrittsversuchID
--- FROM (SELECT tblChips_ChipsID, MIN(Zeitstempel) as Zeitstempel
---         FROM tblZutrittsversuche
---         GROUP BY tblChips_ChipsID) as ErsteZutrittsversuche,
---      tblZutrittsversuche
--- WHERE ErsteZutrittsversuche.tblChips_ChipsID = tblZutrittsversuche.tblChips_ChipsID
--- AND ErsteZutrittsversuche.Zeitstempel = tblZutrittsversuche.Zeitstempel
--- ORDER BY ErsteZutrittsversuche.tblChips_ChipsID;
-
--- Lösung viel zu komplex, versuche das ganze zu vereinfachen.
+-- SELECT tblChips_ChipsID, Ergebnis
+-- FROM tblZutrittsversuche as outerTbl
+-- WHERE Zeitstempel = (
+--     SELECT MIN(Zeitstempel)
+--     FROM tblZutrittsversuche
+--     WHERE tblChips_ChipsID = outerTbl.tblChips_ChipsID
+-- )
+-- ORDER BY tblChips_ChipsID;
